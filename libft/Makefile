@@ -1,9 +1,9 @@
 NAME = libft.a
-CC = gcc
+CC = gcc 
 INC = libft.h
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -O3 
 ARFLAGS = -rcs
-RM = del
+RM = rm -rf
 
 SRCS	= ft_isalpha.c \
 		  ft_isdigit.c \

@@ -3,7 +3,7 @@ SRC = $(wildcard *.c)
 INC = minirt.h
 OBJECTS = $(SRC:.c=.o)
 CC = gcc
-CFLAGS = -I libft -I veclib
+CFLAGS = -I libft -I veclib  -O3
 LIBFT = libft
 VECLIB = veclib
 
@@ -24,10 +24,10 @@ libftf:
 	make -C libft
 
 clean:
-	del $(OBJECTS)
+	rm -rf $(OBJECTS)
 
 fclean: clean
-	del $(NAME).exe
+	rm -rf $(NAME)
 
 ffclean: fclean
 	make fclean -C libft

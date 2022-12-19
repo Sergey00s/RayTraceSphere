@@ -1,9 +1,9 @@
 NAME	= veclib
 CC		= gcc
 INC		= vec3d.h
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror   -O3
 ARFLAGS	= -rcs
-RM		= del
+RM		= rm -rf
 
 SRCS	= vec3d.c
 

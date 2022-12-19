@@ -10,6 +10,8 @@
 # include <vec3d.h>
 # include <libft.h>
 
+#define MYRAND_MAX 0xFFFF
+
 typedef struct s_point
 {
     t_vec3 center;
@@ -86,7 +88,7 @@ int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs);
 void new_sph(t_obj *self,  t_vec3 pos, double r, t_vec3 color);
 double max(double x, double y);
 int s_inter(t_ray ray, t_sph sph, t_hit *hit, double mins, double maxs);
-t_vec3 ray_color(t_ray ray);
+t_vec3 ray_color(t_ray ray, int depth);
 t_ray cr_ray(t_vec3 origin, t_vec3 direction);
 FILE *openppm(const char *name, int width, int height);
 int write_ppm(int red, int green, int blue, FILE *fd);
@@ -96,4 +98,10 @@ void set_face_normal(t_hit *self, t_ray ray, t_vec3 outward_normal);
 double normal_value(double val, double min, double max);
 double point_light(t_hit *h, t_vec3 lp, double maxdist);
 t_vec3 point_light2(t_hit *h, t_point light, t_vec3 color);
+unsigned rands();
+double random_double();
+t_vec3 random_f();
+t_vec3 my_random(double min, double max);
+t_vec3 random_in_unit_sphere();
+double random_doubles(double min, double max);
 #endif

@@ -26,15 +26,14 @@ void write_color(FILE *fd, t_vec3 px_color, int samples)
      char *out;
      double scl;
 
-     scl = 1.0 / samples;
-
+    scl = 1.0 / samples;
     r = px_color.x;
     g = px_color.y;
     b = px_color.z;
 
-   // r = sqrt(scl * r);
-    //g = sqrt(scl * g);
-    //b = sqrt(scl * b);
+    r = sqrt(scl * r);
+    g = sqrt(scl * g);
+    b = sqrt(scl * b);
 
     unsigned ri = (unsigned)(255.999 * my_clamp(r, 0.0, 0.999));
     unsigned gi = (unsigned)(255.999 * my_clamp(g, 0.0, 0.999));
