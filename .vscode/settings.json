@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "cmath": "c",
+        "libft.h": "c",
+        "unistd.h": "c"
+    }
+}
