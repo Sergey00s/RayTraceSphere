@@ -35,10 +35,22 @@ typedef struct s_sph
     double radius;
 }               t_sph;
 
+
+typedef struct s_cyl
+{
+    t_vec3 origin;
+    t_vec3 color;
+    double r;
+    double h;
+}               t_cyl;
+
 typedef struct s_obj
 {
     t_sph *sph;
     int sphsize;
+    t_cyl *cyl;
+    int cylsize;
+
 }              t_obj;
 
 typedef struct s_ray
@@ -72,7 +84,7 @@ typedef struct s_minirt
 typedef struct s_hit
 {
     double t;
-    t_sph *sph;
+    void *addres;
     t_vec3 p;
     t_vec3 normal;
     t_vec3 color;
@@ -82,8 +94,10 @@ typedef struct s_hit
 
 
 extern t_gen gen;
+void new_cyl(t_obj *self, t_vec3 pos, double r, double h, t_vec3 color);
+int c_inter(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs);
 t_obj *objs();
-int shadow_int(t_ray ray, t_obj obj, t_hit *hit, t_sph *not, double maxs);
+int shadow_int(t_ray ray, t_obj obj, t_hit *hit, void *not, double maxs);
 int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs);
 void new_sph(t_obj *self,  t_vec3 pos, double r, t_vec3 color);
 double max(double x, double y);

@@ -40,6 +40,37 @@ int s_inter(t_ray ray, t_sph sph, t_hit *hit, double mins, double maxs)
 
 
 
+int c_inter(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs)
+{
+// cylinder defined by extremes pa and pb, and radious ra
+    t_vec3 ba = sub(pb, pa);
+    t_vec3 oc = sub(ro, pa);
+    float baba = dot(ba, ba);
+    float bard = dot(ba, rd);
+    float baoc = dot(ba, oc);
+    float k2 = baba - bard*bard;
+    float k1 = baba*dot(oc,rd) - baoc*bard;
+    float k0 = baba*dot(oc,oc) - baoc*baoc - ra*ra*baba;
+    float h = k1*k1 - k2*k0;
+    if( h< 0.0 ) 
+        return 0;//no intersection
+    h = sqrt(h);
+    float t = (-k1-h)/k2;
+    // body
+    float y = baoc + t*bard;
+    if( y>0.0 && y<baba ) return vec4( t, (oc+t*rd - ba*y/baba)/ra );
+    // caps
+    t = ( ((y<0.0) ? 0.0 : baba) - baoc)/bard;
+    if( abs(k1+k2*t)<h )
+    {
+        return vec4( t, ba*sign(y)/sqrt(baba) );
+    }
+    return vec4(-1.0);//no intersection
+
+}
+
+
+
 int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs)
 {
     int i;
@@ -49,6 +80,19 @@ int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs)
     t = maxs;
     i = 0;
     ret = 0;
+    while (i < obj.cylsize)
+    {
+        if (c_inter(ray, obj.cyl[i], &temp, mins, t))
+        {
+                *hit = temp; 
+                t = temp.t;
+                hit->color = obj.cyl[i].color;
+                hit->addres = (void *)&(obj.cyl[i]);
+                ret = 1;
+        }
+        i++;
+    }
+    i = 24124;
     while (i < obj.sphsize)
     {
         if (s_inter(ray, obj.sph[i], &temp, mins, t))
@@ -56,15 +100,16 @@ int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs)
                 *hit = temp; 
                 t = temp.t;
                 hit->color = obj.sph[i].color;
-                hit->sph = &(obj.sph[i]);
+                hit->addres = (void *)&(obj.sph[i]);
                 ret = 1;
         }
         i++;
     }
+    i = 0;
     return ret;
 }
 
-int shadow_int(t_ray ray, t_obj obj, t_hit *hit, t_sph *not, double maxs)
+int shadow_int(t_ray ray, t_obj obj, t_hit *hit,  void *not, double maxs)
 {
     int i;
     double t;
@@ -73,16 +118,29 @@ int shadow_int(t_ray ray, t_obj obj, t_hit *hit, t_sph *not, double maxs)
     t = maxs;
     i = 0;
     ret = 0;
-    while (i < obj.sphsize)
+    i = 0;
+    while (i < obj.cylsize)
     {
-        if (s_inter(ray, obj.sph[i], &temp, 0.001, t) && &(obj.sph[i]) != not)
+        if (c_inter(ray, obj.cyl[i], &temp, 0.001, t) && (void *)&(obj.cyl[i]) != not)
         {
                 *hit = temp; 
                 t = temp.t;
-                hit->color = obj.sph[i].color;
+                hit->color = obj.cyl[i].color;
                 ret = 1;
         }
         i++;
     }
+    i = 0;
+    // while (i < obj.sphsize)
+    // {
+    //     if (s_inter(ray, obj.sph[i], &temp, 0.001, t) && (void *)&(obj.sph[i]) != not)
+    //     {
+    //             *hit = temp; 
+    //             t = temp.t;
+    //             hit->color = obj.sph[i].color;
+    //             ret = 1;
+    //     }
+    //     i++;
+    // }
     return ret;
 }

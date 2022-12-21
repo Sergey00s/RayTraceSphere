@@ -40,14 +40,14 @@ void render(t_cam cam, t_img image, FILE *stream)
   for (int j = image.height - 1; j >= 0; --j) {
         for (int i = 0; i < image.width; ++i) {
             curcol = vec3(0, 0, 0);
-            for (size_t samp = 0; samp < 16; samp++)
+            for (size_t samp = 0; samp < 1; samp++)
             {
                 u = (i + random_double()) / (image.width -1);
                 v = (j + random_double()) / (image.height -1);        
                 ray_s = cr_ray(cam.origin, direction(cam, u, v));
-                curcol = add(ray_color(ray_s, 32), curcol);
+                curcol = add(ray_color(ray_s, 5), curcol);
             }
-            write_color(stream, curcol, 16);
+            write_color(stream, curcol, 1);
         }
     }
 }
@@ -97,7 +97,18 @@ t_vec3 ray_color(t_ray ray, int depth)
     t_hit shadow;
     t_ray shadow_ray;
     t_vec3 taget;
+    t_cyl abc;
 
+    abc.h = 0.1;
+    abc.origin = vec3(0, 0, -2);
+    abc.r = 0.1;
+
+    if (c_inter(ray, abc, &hit, 0.001, __DBL_MAX__))
+    {
+        return(vec3(1, 1, 1));
+        
+    }
+    return (vec3(1,0,0));
     if (depth <= 0)
     {
         return vec3(0, 0, 0);
@@ -108,7 +119,7 @@ t_vec3 ray_color(t_ray ray, int depth)
         t_vec3 color;
         t_hit hit_shadow;
         shadow_ray = cr_ray((hit.p) , gen.light.center);
-        if (shadow_int(shadow_ray, *(gen.obj), &hit_shadow, hit.sph, __DBL_MAX__))
+        if (shadow_int(shadow_ray, *(gen.obj), &hit_shadow, hit.addres, __DBL_MAX__))
         {
             //return(vec3(0.1, 0.1, 0.1));
             taget = add(add(hit_shadow.p, hit_shadow.normal), random_in_unit_sphere()); 
@@ -146,18 +157,19 @@ int main(int argc, char const *argv[])
     myimg.height = (int)myimg.width / myimg.a_ratio;
     mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 1));
     gen.obj = objs();
-    new_sph(gen.obj, vec3(0, 0.5, -1), 0.2, vec3(0,0,1));
-    new_sph(gen.obj, vec3(0, 0, -1), 0.2, vec3(1,0,0));
+    //new_sph(gen.obj, vec3(0, 0.5, -1), 0.2, vec3(0,0,1));
+    //new_sph(gen.obj, vec3(0, 0, -1), 0.2, vec3(1,0,0));
     new_sph(gen.obj, vec3(0.5, -100.5, -1), 100, vec3(0,1,0));
+    new_cyl(gen.obj, vec3(0, 0, -1), 0.1, 0.1, vec3(0,0,1));
     printf("%d\n", gen.obj->sphsize);
        // FILE *fd = openppm("image.ppm", myimg.width, myimg.height);
     gen.light.center = vec3(1, 0, -1);
-    gen.light.brightness = 5;
+    gen.light.brightness = 25;
     gen.light.color = vec3(1, 0, 0);
     char *filename;
     char *temp;
     FILE *fd;
-    for (size_t frame = 0; frame < 120; frame++)
+    for (size_t frame = 0; frame < 1; frame++)
     {   
         temp = ft_itoa(frame);
         filename = ft_strjoin("frames/image", temp);
