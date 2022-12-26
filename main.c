@@ -86,6 +86,9 @@ double Convert(double radian)
     return(radian * (180 / pi));
 }
 
+
+
+
 t_vec3 ray_color(t_ray ray, int depth)
 {
     int a;
@@ -97,18 +100,27 @@ t_vec3 ray_color(t_ray ray, int depth)
     t_hit shadow;
     t_ray shadow_ray;
     t_vec3 taget;
-    t_cyl abc;
 
-    abc.h = 0.1;
-    abc.origin = vec3(0, 0, -2);
-    abc.r = 0.1;
-
-    if (c_inter(ray, abc, &hit, 0.001, __DBL_MAX__))
+  
+  int i = 0;
+    while (i < gen.obje->mesh->size)
     {
-        return(vec3(1, 1, 1));
-        
+        if (call_back(ray, gen.obje->mesh->triangles[i], &hit.t, &hit.p))
+        {
+            t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
+            t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
+            t_vec3 norm = cross(ac, ab);
+            if (dot(ray.direction, norm) > 0.0)
+            {
+                norm = (norm);
+            }
+            norm = unit_vector(neg(norm));
+            printf("%f %f %f\n", norm.x, norm.y, norm.z);
+            return norm;
+        }
+        i++;
     }
-    return (vec3(1,0,0));
+    return vec3(0,0,0);
     if (depth <= 0)
     {
         return vec3(0, 0, 0);
@@ -155,19 +167,19 @@ int main(int argc, char const *argv[])
     myimg.a_ratio = 16.0/9.0;
     myimg.width = 1080;
     myimg.height = (int)myimg.width / myimg.a_ratio;
-    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 1));
-    gen.obj = objs();
-    //new_sph(gen.obj, vec3(0, 0.5, -1), 0.2, vec3(0,0,1));
-    //new_sph(gen.obj, vec3(0, 0, -1), 0.2, vec3(1,0,0));
-    new_sph(gen.obj, vec3(0.5, -100.5, -1), 100, vec3(0,1,0));
-    new_cyl(gen.obj, vec3(0, 0, -1), 0.1, 0.1, vec3(0,0,1));
-    printf("%d\n", gen.obj->sphsize);
+    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 5));
+    //gen.obj = objs();
        // FILE *fd = openppm("image.ppm", myimg.width, myimg.height);
     gen.light.center = vec3(1, 0, -1);
     gen.light.brightness = 25;
     gen.light.color = vec3(1, 0, 0);
     char *filename;
     char *temp;
+    t_cyl a;
+    a.h = 1;
+    a.r = 1;
+    t_object obje = object("cyl", vec3(0, 0, 0), vec3(0, 0, 1), &a);
+    gen.obje = &obje;
     FILE *fd;
     for (size_t frame = 0; frame < 1; frame++)
     {   

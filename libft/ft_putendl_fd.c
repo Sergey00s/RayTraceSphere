@@ -19,7 +19,7 @@ void	ft_putendl_fd(char *s, int fd)
 	i = 0;
 	if (!s)
 		return ;
-	while (s[i])
+	while (s[i])	
 		ft_putchar_fd(s[i++], fd);
 	ft_putchar_fd('\n', fd);
 }

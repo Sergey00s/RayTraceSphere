@@ -10,7 +10,21 @@
 # include <vec3d.h>
 # include <libft.h>
 
+# define PI 3.1415926
 #define MYRAND_MAX 0xFFFF
+
+# define IMAX 2147483647
+#define EPSILON 0.000001
+#define CROSS(dest,v1,v2) \
+          dest[0]=v1[1]*v2[2]-v1[2]*v2[1]; \
+          dest[1]=v1[2]*v2[0]-v1[0]*v2[2]; \
+          dest[2]=v1[0]*v2[1]-v1[1]*v2[0];
+#define DOT(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
+#define SUB(dest,v1,v2) \
+          dest[0]=v1[0]-v2[0]; \
+          dest[1]=v1[1]-v2[1]; \
+          dest[2]=v1[2]-v2[2]; 
+
 
 typedef struct s_point
 {
@@ -40,8 +54,11 @@ typedef struct s_cyl
 {
     t_vec3 origin;
     t_vec3 color;
+    t_vec3 cap1;
+    t_vec3 cap2;
     double r;
     double h;
+
 }               t_cyl;
 
 typedef struct s_obj
@@ -59,7 +76,28 @@ typedef struct s_ray
     t_vec3 direction;
 }               t_ray;
 
+typedef struct s_triangle
+{
+    t_vec3 a;
+    t_vec3 b;
+    t_vec3 c;
 
+    t_vec3 normal;
+}   t_triangle;
+
+typedef struct s_mesh
+{
+    t_triangle *triangles;
+    int size;
+}               t_mesh;
+
+typedef struct s_object
+{
+    char *name;
+    t_mesh *mesh;
+    t_vec3 center;
+    t_vec3 color;
+}               t_object;
 
 typedef struct s_cam
 {
@@ -78,6 +116,7 @@ typedef struct s_minirt
 {
     t_cam cam;
     t_obj *obj;
+    t_object *obje;
     t_point light;
 }               t_gen;
 
@@ -94,8 +133,14 @@ typedef struct s_hit
 
 
 extern t_gen gen;
+t_object object(char *name, t_vec3 center, t_vec3 color, void *data);
+int call_back(t_ray ray, t_triangle tris, double *value, t_vec3 *pos);
+t_triangle triangle(t_vec3 v1, t_vec3 v2, t_vec3 v3);
+t_mesh *mesh(void);
+void mesh_append(t_mesh *self, t_triangle triangle);
 void new_cyl(t_obj *self, t_vec3 pos, double r, double h, t_vec3 color);
 int c_inter(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs);
+int c_inter2(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs);
 t_obj *objs();
 int shadow_int(t_ray ray, t_obj obj, t_hit *hit, void *not, double maxs);
 int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs);

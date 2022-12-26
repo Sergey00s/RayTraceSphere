@@ -1,7 +1,7 @@
 NAME = libft.a
 CC = gcc 
 INC = libft.h
-CFLAGS = -Wall -Wextra -Werror -O3 
+CFLAGS = -Wall -Wextra -Werror 
 ARFLAGS = -rcs
 RM = rm -rf
 
