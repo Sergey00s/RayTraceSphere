@@ -40,36 +40,50 @@ void mesh_append(t_mesh *self, t_triangle triangle)
 }
 
 
-t_mesh *make_cylinder(t_vec3 *arr, t_cyl *data, double h, t_vec3 *arr2, int sectors)
+t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int sectors)
 {
     t_mesh *mmes;
+    t_vec3 a;
+    t_vec3 b;
+    t_vec3 c;
     int i;
 
     mmes = mesh();
     i = 0;
-    while (i + 1 < (sectors))
+    while (i < (sectors))
     {
-        mesh_append(mmes, triangle(vec3(0, 0, 0), arr[i], arr[i + 1]));
+        if (i < (sectors - 1))
+            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i], bot[i + 1]));
+        else
+            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i], bot[0]));
+        
         i++;
     }
-    i = 0;
-    while (i + 1 < (sectors))
-    {
-        mesh_append(mmes, triangle(vec3(0, data->h,0), arr2[i], arr2[i + 1]));
-        i++;
-    }
+    printf("%d %d\n", mmes->size, i);
     i = 0;
     while (i < (sectors))
     {
-        mesh_append(mmes, triangle(arr2[i], arr2[i + 1], arr[i]));
+        if (i < (sectors - 1))
+            mesh_append(mmes, triangle(vec3(0, data->h,0), top[i], top[i + 1]));        
+        else
+            mesh_append(mmes, triangle(vec3(0, data->h,0), top[i], top[0])); 
+
         i++;
     }
     i = 0;
-    while (i < (sectors))
+    while (i + 1 < (sectors))
     {
-        mesh_append(mmes, triangle(arr[i], arr[i + 1], arr2[i + 1]));
+        a = top[i + 1];
+        b = top[i];
+        c = bot[i + 1];
+        mesh_append(mmes, triangle(a, b, c));
+        a = top[i];
+        b = bot[i];
+        c = bot[i + 1];
+        mesh_append(mmes, triangle(a, b, c));
         i++;
     }
+
     return mmes;
 }
 
@@ -95,7 +109,7 @@ void cylinder(t_mesh **self, t_cyl *data)
     t_vec3 *arr2;
     t_vec3 *temp;
     double degree;
-    int sectorCount = 40;
+    int sectorCount = 4;
     float sectorStep = 2 * PI / sectorCount;
     double x;
     double y;
@@ -106,22 +120,21 @@ void cylinder(t_mesh **self, t_cyl *data)
     int i;
     arr = malloc(sizeof(t_vec3) * (sectorCount + 1));
     arr2 = malloc(sizeof(t_vec3) * (sectorCount + 1));
-    i = -1;
+    i = 0;
     h = 0;
-    t_vec3 center = vec3(0.0, 0.0, 0);
-
-    while (++i < sectorCount)
+    t_vec3 center = vec3(0.0, 0.0, 0.0);
+    while (++i <= sectorCount)
     {
-        degree = i * sectorStep;
-        x = data->r * cos(degree) + center.x;
-        y = data->r * sin(degree) + center.y;
+        degree = i * (sectorStep);
+        x = data->r * cos(degree);
+        y = data->r * sin(degree);
         z = 0;
         arr[h] = vec3(x, z, y);
         h++;
     }
     h = 0;
-    i = -1;
-    while (++i < sectorCount)
+    i = 0;
+    while (++i <= sectorCount)
     {
         degree = i * sectorStep;
         x = data->r * cos(degree) + center.x;

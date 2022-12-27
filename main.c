@@ -42,8 +42,11 @@ void render(t_cam cam, t_img image, FILE *stream)
             curcol = vec3(0, 0, 0);
             for (size_t samp = 0; samp < 1; samp++)
             {
-                u = (i + random_double()) / (image.width -1);
-                v = (j + random_double()) / (image.height -1);        
+             //   u = (i + random_double()) / (image.width -1);
+                u = ((double)(i)) / (image.width -1);
+           //     v = (j + random_double()) / (image.height -1);
+                v = ((double)(j)) / (image.height -1);        
+
                 ray_s = cr_ray(cam.origin, direction(cam, u, v));
                 curcol = add(ray_color(ray_s, 5), curcol);
             }
@@ -101,22 +104,26 @@ t_vec3 ray_color(t_ray ray, int depth)
     t_ray shadow_ray;
     t_vec3 taget;
 
-  
-  int i = 0;
+    val = 0;
+    double tmin;
+    tmin = 00;
+    int i = 0;
     while (i < gen.obje->mesh->size)
     {
-        if (call_back(ray, gen.obje->mesh->triangles[i], &hit.t, &hit.p))
+        if (call_back(ray, gen.obje->mesh->triangles[i], &val, &hit.p))
         {
-            t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
-            t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
-            t_vec3 norm = cross(ac, ab);
-            if (dot(ray.direction, norm) > 0.0)
+            if (i == 0 || val < tmin)
             {
-                norm = (norm);
+                t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
+                t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
+                t_vec3 norm = cross(ac, ab);
+                tmin = hit.t;
+                if (dot(norm, gen.cam.origin) < 0.0)
+                {
+                    return neg(norm);
+                }
+                return norm;
             }
-            norm = unit_vector(neg(norm));
-            printf("%f %f %f\n", norm.x, norm.y, norm.z);
-            return norm;
         }
         i++;
     }
