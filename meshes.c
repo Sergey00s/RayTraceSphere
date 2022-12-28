@@ -53,13 +53,12 @@ t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int secto
     while (i < (sectors))
     {
         if (i < (sectors - 1))
-            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i], bot[i + 1]));
+            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i + 1], bot[i]));
         else
-            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i], bot[0]));
+            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[0], bot[i]));
         
         i++;
     }
-    printf("%d %d\n", mmes->size, i);
     i = 0;
     while (i < (sectors))
     {
@@ -71,19 +70,31 @@ t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int secto
         i++;
     }
     i = 0;
-    while (i + 1 < (sectors))
+    while (i < (sectors))
     {
-        a = top[i + 1];
+        if (i < (sectors - 1))
+        {
+            a = top[i + 1];
+            c = bot[i + 1];
+        }
+        else
+        {
+            a =  top[0];
+            c =  bot[0];
+        }
         b = top[i];
-        c = bot[i + 1];
         mesh_append(mmes, triangle(a, b, c));
+        if (i < (sectors - 1))
+        {
+            c = bot[i + 1];
+        }
+        else 
+            c = bot[0];        
         a = top[i];
         b = bot[i];
-        c = bot[i + 1];
         mesh_append(mmes, triangle(a, b, c));
         i++;
     }
-
     return mmes;
 }
 
@@ -144,7 +155,7 @@ void cylinder(t_mesh **self, t_cyl *data)
         h++;
     }
     *self = make_cylinder(arr, data, h, arr2, sectorCount);
-    move_mesh(*self, add(neg(vec3(0, 0, 0)), vec3(0, -2, -2)));
+    move_mesh(*self, add(neg(vec3(0, 0, 0)), vec3(0, -2, -1)));
 }
 
 t_object object(char *name, t_vec3 center, t_vec3 color, void *data)
