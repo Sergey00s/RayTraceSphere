@@ -1,7 +1,6 @@
 #include "minirt.h"
 
 
-
 FILE *openppm(const char *name, int width, int height)
 {
     FILE *fp = fopen(name, "w");

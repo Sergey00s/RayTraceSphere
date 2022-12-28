@@ -2,6 +2,11 @@
     "files.associations": {
         "cmath": "c",
         "libft.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "stdarg.h": "c",
+        "cstdarg": "c",
+        "algorithm": "c",
+        "cstdio": "c",
+        "cwchar": "c"
     }
 }

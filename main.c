@@ -42,10 +42,10 @@ void render(t_cam cam, t_img image, FILE *stream)
             curcol = vec3(0, 0, 0);
             for (size_t samp = 0; samp < 1; samp++)
             {
-                u = (i + random_double()) / (image.width -1);
-                //u = ((double)(i)) / (image.width -1);
-                 v = (j + random_double()) / (image.height -1);
-               // v = ((double)(j)) / (image.height -1);        
+               // u = (i + random_double()) / (image.width -1);
+                u = ((double)(i)) / (image.width -1);
+               //  v = (j + random_double()) / (image.height -1);
+                v = ((double)(j)) / (image.height -1);        
 
                 ray_s = cr_ray(cam.origin, direction(cam, u, v));
                 curcol = add(ray_color(ray_s, 5), curcol);
@@ -94,64 +94,40 @@ double Convert(double radian)
 
 t_vec3 ray_color(t_ray ray, int depth)
 {
-    int a;
+    t_vec3 col;
     t_hit hit;
-    double dist;
-    double val;
-    hit.front_face = 0;
     t_hit shadow;
     t_ray shadow_ray;
-    t_vec3 taget;
-
-    val = 0;
     double tmin;
-    tmin = -1;
     int i = 0;
-    dist = 0;
-    t_vec3 col;
+
+    tmin = -1;
     while (i < gen.obje->mesh->size)
     {
-        if (call_back(ray, gen.obje->mesh->triangles[i], &val, &hit.p))
-        {
-            if (tmin == -1 || val < tmin)
-            {
-                dist = 1;
-                tmin = val;
-                t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
-                t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
-                t_vec3 norm = cross(ac, ab);
-                t_hit hit2;
 
+        t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
+        t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
+        t_vec3 norm = unit_vector(cross(ac, ab));
+        if (dot(norm, sub(ray.origin, ray.direction)) < 0.0)
+        {
+            i++;
+            continue;
+        }
+        if (call_back(ray, gen.obje->mesh->triangles[i], &(hit.t), &hit.p))
+        {
+            if (tmin == -1 || hit.t < tmin)
+            {
+                tmin = hit.t;
+                t_hit hit2;
                 hit2.normal = norm;
-                hit2.p = ray_on_at(ray, val);
-                col = point_light2(&hit2, gen.light, vec3(1,0,0));
+                hit2.p = ray_on_at(ray, hit.t);
+                col = norm;   //point_light2(&hit2, , vec3(1,0,0));
             }
         }
         i++;
     }
-    if (dist)
+    if (tmin != -1)
         return col;
-    return vec3(0,0,0);
-    if (depth <= 0)
-    {
-        return vec3(0, 0, 0);
-    }
-    a = all_intersect(ray, *(gen.obj), &hit, 0.01, __DBL_MAX__);
-    if (a)
-    {   
-        t_vec3 color;
-        t_hit hit_shadow;
-        shadow_ray = cr_ray((hit.p) , gen.light.center);
-        if (shadow_int(shadow_ray, *(gen.obj), &hit_shadow, hit.addres, __DBL_MAX__))
-        {
-            //return(vec3(0.1, 0.1, 0.1));
-            taget = add(add(hit_shadow.p, hit_shadow.normal), random_in_unit_sphere()); 
-            return mpv(mp(ray_color(cr_ray(hit_shadow.p, add(taget, neg(hit_shadow.p))), depth - 1), hit.color), 0.04);
-        }
-        color = point_light2(&hit, gen.light, hit.color);
-        taget = add(add(hit.p, hit.normal), random_in_unit_sphere()); 
-        return mp(mpv(color, 0.5), ray_color(cr_ray(hit.p, add(taget, neg(hit.p))), depth - 1));
-    }
     return (vec3(0.15, 0.15, 0.15));
 }
 
@@ -176,11 +152,9 @@ int main(int argc, char const *argv[])
 
 
     myimg.a_ratio = 16.0/9.0;
-    myimg.width = 400;
+    myimg.width = 1080;
     myimg.height = (int)myimg.width / myimg.a_ratio;
-    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 5));
-    //gen.obj = objs();
-       // FILE *fd = openppm("image.ppm", myimg.width, myimg.height);
+    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 0));
     gen.light.center = vec3(1, 0, -1);
     gen.light.brightness = 25;
     gen.light.color = vec3(1, 0, 0);
@@ -189,7 +163,7 @@ int main(int argc, char const *argv[])
     t_cyl a;
     a.h = 1;
     a.r = 1;
-    t_object obje = object("cyl", vec3(0, 0, 0), vec3(0, 0, 1), &a);
+    t_object obje = object("cyl", vec3(0, 0, -4), vec3(0, 0, -4), &a);
     gen.obje = &obje;
     FILE *fd;
     for (size_t frame = 0; frame < 1; frame++)
@@ -201,7 +175,7 @@ int main(int argc, char const *argv[])
         free(filename);
         fd = openppm(temp, myimg.width, myimg.height);
         free(temp);
-        gen.light.center = vec3(1, 2, -0.6);
+        gen.light.center = vec3(0, 0, 0);
         render(mycam, myimg, fd);
         fclose(fd);
         ft_putnbr_fd(frame, 1);

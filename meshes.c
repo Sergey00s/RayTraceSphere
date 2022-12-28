@@ -113,14 +113,14 @@ void move_mesh(t_mesh *mesh, t_vec3 to)
     }
 }
 
-void cylinder(t_mesh **self, t_cyl *data)
+void cylinder(t_mesh **self, t_cyl *data, t_vec3 center)
 {
     
     t_vec3 *arr;
     t_vec3 *arr2;
     t_vec3 *temp;
     double degree;
-    int sectorCount = 4;
+    int sectorCount = 15;
     float sectorStep = 2 * PI / sectorCount;
     double x;
     double y;
@@ -133,7 +133,6 @@ void cylinder(t_mesh **self, t_cyl *data)
     arr2 = malloc(sizeof(t_vec3) * (sectorCount + 1));
     i = 0;
     h = 0;
-    t_vec3 center = vec3(0.0, 0.0, 0.0);
     while (++i <= sectorCount)
     {
         degree = i * (sectorStep);
@@ -148,14 +147,14 @@ void cylinder(t_mesh **self, t_cyl *data)
     while (++i <= sectorCount)
     {
         degree = i * sectorStep;
-        x = data->r * cos(degree) + center.x;
-        y = data->r * sin(degree) + center.y;
+        x = data->r * cos(degree);
+        y = data->r * sin(degree);
         z = data->h;
         arr2[h] = vec3(x, z, y);
         h++;
     }
     *self = make_cylinder(arr, data, h, arr2, sectorCount);
-    move_mesh(*self, add(neg(vec3(0, 0, 0)), vec3(0, -2, -1)));
+    move_mesh(*self, add(neg(vec3(0, 0, 0)), center));
 }
 
 t_object object(char *name, t_vec3 center, t_vec3 color, void *data)
@@ -171,8 +170,7 @@ t_object object(char *name, t_vec3 center, t_vec3 color, void *data)
     }
     else if (ft_strncmp("cyl", name, ft_strlen(name)) == 0)
     {
-        cylinder(&(obj.mesh), data);
-
+        cylinder(&(obj.mesh), data, center);
     }
     else if (ft_strncmp("pln", name, ft_strlen(name)) == 0)
     {
