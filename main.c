@@ -46,7 +46,6 @@ void render(t_cam cam, t_img image, FILE *stream)
                 u = ((double)(i)) / (image.width -1);
                //  v = (j + random_double()) / (image.height -1);
                 v = ((double)(j)) / (image.height -1);        
-
                 ray_s = cr_ray(cam.origin, direction(cam, u, v));
                 curcol = add(ray_color(ray_s, 5), curcol);
             }
@@ -73,24 +72,15 @@ double normal_value(double val, double min, double max)
 }
 
 
-double Convert(double radian)
+t_vec3 center_of_triangle(t_triangle tri)
 {
-    double pi = 3.14159;
-    double rtn; 
+    t_vec3 a;
 
-    rtn = radian * (180 / pi);
-    if (rtn > 360)
-    {
-        while (rtn > 360.0)
-        {
-            rtn = rtn - 360;
-        }
-    }
-    return(radian * (180 / pi));
+    a = add(tri.a, tri.b);
+    a = add(a, tri.c);
+    a = dvd(a, 3);
+    return a;
 }
-
-
-
 
 t_vec3 ray_color(t_ray ray, int depth)
 {
@@ -163,7 +153,7 @@ int main(int argc, char const *argv[])
     t_cyl a;
     a.h = 1;
     a.r = 1;
-    t_object obje = object("cyl", vec3(0, 0, -4), vec3(0, 0, -4), &a);
+    t_object obje = object("cyl", vec3(0, 0, -2), vec3(0, 0, -4), &a);
     gen.obje = &obje;
     FILE *fd;
     for (size_t frame = 0; frame < 1; frame++)
