@@ -54,10 +54,9 @@ typedef struct s_cyl
 {
     t_vec3 origin;
     t_vec3 color;
-    t_vec3 cap1;
-    t_vec3 cap2;
     double r;
     double h;
+    double size;
 
 }               t_cyl;
 
@@ -96,8 +95,17 @@ typedef struct s_object
     char *name;
     t_mesh *mesh;
     t_vec3 center;
+    t_vec3 direction;
     t_vec3 color;
 }               t_object;
+
+typedef struct s_scene
+{
+    t_object object;
+    struct s_scene *next;
+    struct s_scene *prev;
+
+}               t_scene;
 
 typedef struct s_cam
 {
@@ -118,6 +126,7 @@ typedef struct s_minirt
     t_obj *obj;
     t_object *obje;
     t_point light;
+    t_scene *scene;
 }               t_gen;
 
 typedef struct s_hit
@@ -133,7 +142,14 @@ typedef struct s_hit
 
 
 extern t_gen gen;
-t_object object(char *name, t_vec3 center, t_vec3 color, void *data);
+void smooth_normals(t_mesh *mesh);
+void add_scene(char *name, t_vec3 center, t_vec3 color, t_cyl data);
+t_cyl cyldata(double radius, double height, double size);
+t_vec3 ray_color2(t_ray ray, int depth);
+t_scene *scene_obj(t_object object);
+void scene_add_back(t_scene **self, t_scene *newscn);
+void calculate_normals(t_mesh *mesh);
+t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data);
 int call_back(t_ray ray, t_triangle tris, double *value, t_vec3 *pos);
 t_triangle triangle(t_vec3 v1, t_vec3 v2, t_vec3 v3);
 t_mesh *mesh(void);
@@ -163,4 +179,5 @@ t_vec3 random_f();
 t_vec3 my_random(double min, double max);
 t_vec3 random_in_unit_sphere();
 double random_doubles(double min, double max);
+void smooth_normals(t_mesh *mesh);
 #endif

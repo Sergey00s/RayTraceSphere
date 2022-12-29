@@ -3,7 +3,7 @@ SRC = $(wildcard *.c)
 INC = minirt.h
 OBJECTS = $(SRC:.c=.o)
 CC = gcc
-CFLAGS = -I libft -I veclib -lm
+CFLAGS = -I libft -I veclib 
 LIBFT = libft
 VECLIB = veclib
 

@@ -47,7 +47,8 @@ void render(t_cam cam, t_img image, FILE *stream)
                //  v = (j + random_double()) / (image.height -1);
                 v = ((double)(j)) / (image.height -1);        
                 ray_s = cr_ray(cam.origin, direction(cam, u, v));
-                curcol = add(ray_color(ray_s, 5), curcol);
+                
+                curcol = add(ray_color2(ray_s, 5), curcol);
             }
             write_color(stream, curcol, 1);
         }
@@ -82,94 +83,69 @@ t_vec3 center_of_triangle(t_triangle tri)
     return a;
 }
 
-t_vec3 ray_color(t_ray ray, int depth)
-{
-    t_vec3 col;
-    t_hit hit;
-    t_hit shadow;
-    t_ray shadow_ray;
-    double tmin;
-    int i = 0;
+// t_vec3 ray_color(t_ray ray, int depth)
+// {
+//     t_vec3 col;
+//     t_hit hit;
+//     t_hit shadow;
+//     t_ray shadow_ray;
+//     double tmin;
+//     int i = 0;
 
-    tmin = -1;
-    while (i < gen.obje->mesh->size)
-    {
+//     tmin = -1;
+//     while (i < gen.obje->mesh->size)
+//     {
 
-        t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
-        t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
-        t_vec3 norm = unit_vector(cross(ac, ab));
-        if (dot(norm, sub(ray.origin, ray.direction)) < 0.0)
-        {
-            i++;
-            continue;
-        }
-        if (call_back(ray, gen.obje->mesh->triangles[i], &(hit.t), &hit.p))
-        {
-            if (tmin == -1 || hit.t < tmin)
-            {
-                tmin = hit.t;
-                t_hit hit2;
-                hit2.normal = norm;
-                hit2.p = ray_on_at(ray, hit.t);
-                col = norm;   //point_light2(&hit2, , vec3(1,0,0));
-            }
-        }
-        i++;
-    }
-    if (tmin != -1)
-        return col;
-    return (vec3(0.15, 0.15, 0.15));
-}
+//         // t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
+//         // t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
+//         // t_vec3 norm = unit_vector(cross(ac, ab));
+//         if (dot(gen.obje->mesh->triangles[i].normal, sub(ray.origin, ray.direction)) < 0.0)
+//         {
+//             i++;
+//             continue;
+//         }
+//         if (call_back(ray, gen.obje->mesh->triangles[i], &(hit.t), &hit.p))
+//         {
+//             if (tmin == -1 || hit.t < tmin)
+//             {
+//                 tmin = hit.t;
+//                //hit2.p = ray_on_at(ray, hit.t);
+//                 col = gen.obje->mesh->triangles[i].normal;   //point_light2(&hit2, , vec3(1,0,0));
+//             }
+//         }
+//         i++;
+//     }
+//     if (tmin != -1)
+//         return col;
+//     return (vec3(0.15, 0.15, 0.15));
+// }
 
 
 
-t_vec3 circ(int frame)
-{
-    t_vec3 result;
-
-    float angle = frame * 0.3;
-    float x = 2 * cos(angle);
-    float y = 2 * sin(angle);
-    
-    return vec3(x, 1, y);
-}
 
 int main(int argc, char const *argv[])
 {
 
     t_cam mycam;
     t_img myimg;
+    t_scene *myscene;
 
 
     myimg.a_ratio = 16.0/9.0;
     myimg.width = 1080;
     myimg.height = (int)myimg.width / myimg.a_ratio;
-    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 0));
+    mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 2));
     gen.light.center = vec3(1, 0, -1);
     gen.light.brightness = 25;
     gen.light.color = vec3(1, 0, 0);
     char *filename;
     char *temp;
-    t_cyl a;
-    a.h = 1;
-    a.r = 1;
-    t_object obje = object("cyl", vec3(0, 0, -2), vec3(0, 0, -4), &a);
-    gen.obje = &obje;
+   // add_scene("cyl", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
+    add_scene("pln", vec3(0, -1, -2), vec3(0, 0 ,1), cyldata(0, 0, 0));
+  // add_scene("cyl", vec3(0, 1, -4), vec3(1, 0, 0), cyldata(0.2, 0.3, 0));
     FILE *fd;
-    for (size_t frame = 0; frame < 1; frame++)
-    {   
-        temp = ft_itoa(frame);
-        filename = ft_strjoin("frames/image", temp);
-        free(temp);
-        temp = ft_strjoin(filename, ".ppm");
-        free(filename);
-        fd = openppm(temp, myimg.width, myimg.height);
-        free(temp);
-        gen.light.center = vec3(0, 0, 0);
-        render(mycam, myimg, fd);
-        fclose(fd);
-        ft_putnbr_fd(frame, 1);
-        ft_putchar_fd('\n', 1);
-    }
+    fd = openppm("frames/new.ppm", myimg.width, myimg.height);
+    render(mycam, myimg, fd);
+    fclose(fd);
     return 0;
 }

@@ -39,7 +39,6 @@ void mesh_append(t_mesh *self, t_triangle triangle)
     free(temp);
 }
 
-
 t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int sectors)
 {
     t_mesh *mmes;
@@ -55,8 +54,7 @@ t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int secto
         if (i < (sectors - 1))
             mesh_append(mmes, triangle(vec3(0, 0, 0), bot[i + 1], bot[i]));
         else
-            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[0], bot[i]));
-        
+            mesh_append(mmes, triangle(vec3(0, 0, 0), bot[0], bot[i]));        
         i++;
     }
     i = 0;
@@ -66,7 +64,6 @@ t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int secto
             mesh_append(mmes, triangle(vec3(0, data->h,0), top[i], top[i + 1]));        
         else
             mesh_append(mmes, triangle(vec3(0, data->h,0), top[i], top[0])); 
-
         i++;
     }
     i = 0;
@@ -104,7 +101,7 @@ void move_mesh(t_mesh *mesh, t_vec3 to)
     int i;
 
     i = 0;
-    while (i < mesh->size)
+    while (i <= mesh->size)
     {
         (mesh->triangles[i]).a = add((mesh->triangles[i]).a, to);
        (mesh->triangles[i]).b = add((mesh->triangles[i]).b, to); 
@@ -155,9 +152,41 @@ void cylinder(t_mesh **self, t_cyl *data, t_vec3 center)
     }
     *self = make_cylinder(arr, data, h, arr2, sectorCount);
     move_mesh(*self, add(neg(vec3(0, 0, 0)), center));
+    calculate_normals(*self);
+    //smooth_normals(*self);
+
 }
 
-t_object object(char *name, t_vec3 center, t_vec3 color, void *data)
+
+
+void plane(t_mesh **self, t_cyl *data, t_vec3 center)
+{
+    t_vec3 a;
+    t_vec3 b;
+    t_vec3 c;
+    t_vec3 d;
+
+    *self = mesh();
+    a.x = data->size;
+    a.z = data->size;
+    a.y = 0;
+    b.x = data->size;
+    b.z = -data->size;
+    b.y = 0;
+    c.x = -data->size;
+    c.z = data->size;
+    c.y = 0;
+    d.x = -data->size;
+    d.z = -data->size;
+    d.y = 0;
+    mesh_append(*self, triangle(d, b, a));
+    mesh_append(*self, triangle(a, c, b));
+    move_mesh(*self, center);
+    calculate_normals(*self);
+}
+
+
+t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
 {
     t_object obj;
 
@@ -170,11 +199,11 @@ t_object object(char *name, t_vec3 center, t_vec3 color, void *data)
     }
     else if (ft_strncmp("cyl", name, ft_strlen(name)) == 0)
     {
-        cylinder(&(obj.mesh), data, center);
+        cylinder(&(obj.mesh), &data, center);
     }
     else if (ft_strncmp("pln", name, ft_strlen(name)) == 0)
     {
-        // pln
+        plane(&(obj.mesh), &data, center);
     }
     return obj;
 }
