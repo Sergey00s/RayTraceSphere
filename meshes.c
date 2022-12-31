@@ -13,7 +13,7 @@ t_mesh *mesh(void)
 {
     t_mesh *mesh;
 
-    mesh = malloc(sizeof(t_mesh) * 1);
+    mesh = malloc(sizeof(t_mesh));
     mesh->size = 0;
     mesh->triangles = NULL;
     return mesh;
@@ -27,17 +27,16 @@ void mesh_append(t_mesh *self, t_triangle triangle)
     if (!self)
         return;
     temp = self->triangles;
-    self->triangles = malloc(sizeof(t_triangle) * (self->size + 1));
+    self->triangles = malloc(sizeof(t_triangle) * (self->size + 2));
     i = 0;
     while (i < self->size)
     {
         self->triangles[i] = temp[i];
         i++;
     }
+    free(temp);
     self->triangles[i] = triangle;
     self->size++;
-    free(temp);
-    
 }
 
 t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int sectors)
@@ -93,6 +92,8 @@ t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int secto
         mesh_append(mmes, triangle(a, b, c));
         i++;
     }
+    free(bot);
+    free(top);
     return mmes;
 }
 
@@ -154,7 +155,7 @@ void cylinder(t_mesh **self, t_cyl *data, t_vec3 center)
     *self = make_cylinder(arr, data, h, arr2, sectorCount);
     move_mesh(*self, add(neg(vec3(0, 0, 0)), center));
     calculate_normals(*self);
-    //smooth_normals(*self);
+
 
 }
 
@@ -168,37 +169,11 @@ void plane(t_mesh **self, t_cyl *data, t_vec3 center)
     t_vec3 d;
 
     *self = mesh();
-    a.x = data->size;
-    a.z = data->size;
-    a.y = 0;
-    b.x = data->size;
-    b.z = -data->size;
-    b.y = 0;
-    c.x = -data->size;
-    c.z = data->size;
-    c.y = 0;
-    d.x = -data->size;
-    d.z = -data->size;
-    d.y = 0;
-    mesh_append(*self, triangle(d, b, a));
-    mesh_append(*self, triangle(a, c, b));
+    
     move_mesh(*self, center);
     calculate_normals(*self);
 }
 
-
-void sphere(t_mesh **self, t_cyl *data, t_vec3 center)
-{
-    t_vec3 a;
-    t_vec3 b;
-    t_vec3 c;
-    t_vec3 d;
-
-    *self = mesh();
-    subdivide(*self);
-    move_mesh(*self, center);
-    calculate_normals(*self);
-}
 
 t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
 {
@@ -209,7 +184,10 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     obj.name = name;
     if (ft_strncmp("sph", name, ft_strlen(name)) == 0)
     {
-        sphere(&(obj.mesh), &data, center); 
+        obj.mesh = mesh();
+        drawSphere(1, 0, 0, obj.mesh);
+        move_mesh(obj.mesh, vec3(0, 0, -2));
+        calculate_normals(obj.mesh);
     }
     else if (ft_strncmp("cyl", name, ft_strlen(name)) == 0)
     {

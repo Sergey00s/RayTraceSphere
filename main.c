@@ -33,10 +33,7 @@ void render(t_cam cam, t_img image, FILE *stream)
     double u;
     double v;
     t_ray ray_s;
-    t_vec3 curcol;
-
-
-    
+    t_vec3 curcol;    
   for (int j = image.height - 1; j >= 0; --j) {
         for (int i = 0; i < image.width; ++i) {
             curcol = vec3(0, 0, 0);
@@ -91,8 +88,6 @@ int main(int argc, char const *argv[])
     t_cam mycam;
     t_img myimg;
     t_scene *myscene;
-
-
     myimg.a_ratio = 16.0/9.0;
     myimg.width = 1080;
     myimg.height = (int)myimg.width / myimg.a_ratio;
@@ -105,10 +100,16 @@ int main(int argc, char const *argv[])
     //t_mesh *a;
     //subdivide(a);
     //printf("aut\n");
-   // add_scene("cyl", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
-    add_scene("cyl", vec3(0, -1, -2), vec3(0, 0 ,1), cyldata(0, 0, 0));
+    add_scene("sph", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
+
+
+    //add_scene("pln", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
+    //add_scene("cyl", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
+    
+
   // add_scene("cyl", vec3(0, 1, -4), vec3(1, 0, 0), cyldata(0.2, 0.3, 0));
     FILE *fd;
+    
     fd = openppm("frames/new.ppm", myimg.width, myimg.height);
     render(mycam, myimg, fd);
     fclose(fd);

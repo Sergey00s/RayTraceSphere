@@ -142,6 +142,7 @@ typedef struct s_hit
 
 extern t_gen gen;
 void subdivide(t_mesh *mymesh);
+void drawSphere(double r, int lats, int longs, t_mesh *self);
 void smooth_normals(t_mesh *mesh);
 void add_scene(char *name, t_vec3 center, t_vec3 color, t_cyl data);
 t_cyl cyldata(double radius, double height, double size);

@@ -11,6 +11,7 @@ t_vec3 ray_color2(t_ray ray, int depth)
     t_scene *temp;
     temp = gen.scene;
     tmin = -1;
+    
     while (temp)
     {
         int i = 0;
@@ -28,7 +29,7 @@ t_vec3 ray_color2(t_ray ray, int depth)
                     tmin = hit.t;
                        //hit2.p = ray_on_at(ray, hit.t);
                     col = temp->object.mesh->triangles[i].normal;
-                    col = vec3(1, 1, 1); //point_light2(&hit2, , vec3(1,0,0));
+                    //col = vec3(1, 1, 1); //point_light2(&hit2, , vec3(1,0,0));
                 }
             }
             i++;
