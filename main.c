@@ -83,44 +83,6 @@ t_vec3 center_of_triangle(t_triangle tri)
     return a;
 }
 
-// t_vec3 ray_color(t_ray ray, int depth)
-// {
-//     t_vec3 col;
-//     t_hit hit;
-//     t_hit shadow;
-//     t_ray shadow_ray;
-//     double tmin;
-//     int i = 0;
-
-//     tmin = -1;
-//     while (i < gen.obje->mesh->size)
-//     {
-
-//         // t_vec3 ab = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].b);
-//         // t_vec3 ac = sub((gen.obje->mesh->triangles[i].a), gen.obje->mesh->triangles[i].c);
-//         // t_vec3 norm = unit_vector(cross(ac, ab));
-//         if (dot(gen.obje->mesh->triangles[i].normal, sub(ray.origin, ray.direction)) < 0.0)
-//         {
-//             i++;
-//             continue;
-//         }
-//         if (call_back(ray, gen.obje->mesh->triangles[i], &(hit.t), &hit.p))
-//         {
-//             if (tmin == -1 || hit.t < tmin)
-//             {
-//                 tmin = hit.t;
-//                //hit2.p = ray_on_at(ray, hit.t);
-//                 col = gen.obje->mesh->triangles[i].normal;   //point_light2(&hit2, , vec3(1,0,0));
-//             }
-//         }
-//         i++;
-//     }
-//     if (tmin != -1)
-//         return col;
-//     return (vec3(0.15, 0.15, 0.15));
-// }
-
-
 
 
 int main(int argc, char const *argv[])
@@ -140,8 +102,11 @@ int main(int argc, char const *argv[])
     gen.light.color = vec3(1, 0, 0);
     char *filename;
     char *temp;
+    //t_mesh *a;
+    //subdivide(a);
+    //printf("aut\n");
    // add_scene("cyl", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
-    add_scene("pln", vec3(0, -1, -2), vec3(0, 0 ,1), cyldata(0, 0, 0));
+    add_scene("cyl", vec3(0, -1, -2), vec3(0, 0 ,1), cyldata(0, 0, 0));
   // add_scene("cyl", vec3(0, 1, -4), vec3(1, 0, 0), cyldata(0.2, 0.3, 0));
     FILE *fd;
     fd = openppm("frames/new.ppm", myimg.width, myimg.height);

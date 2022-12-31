@@ -37,6 +37,7 @@ void mesh_append(t_mesh *self, t_triangle triangle)
     self->triangles[i] = triangle;
     self->size++;
     free(temp);
+    
 }
 
 t_mesh *make_cylinder(t_vec3 *bot, t_cyl *data, double h, t_vec3 *top, int sectors)
@@ -186,6 +187,19 @@ void plane(t_mesh **self, t_cyl *data, t_vec3 center)
 }
 
 
+void sphere(t_mesh **self, t_cyl *data, t_vec3 center)
+{
+    t_vec3 a;
+    t_vec3 b;
+    t_vec3 c;
+    t_vec3 d;
+
+    *self = mesh();
+    subdivide(*self);
+    move_mesh(*self, center);
+    calculate_normals(*self);
+}
+
 t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
 {
     t_object obj;
@@ -195,7 +209,7 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     obj.name = name;
     if (ft_strncmp("sph", name, ft_strlen(name)) == 0)
     {
-        //sph   
+        sphere(&(obj.mesh), &data, center); 
     }
     else if (ft_strncmp("cyl", name, ft_strlen(name)) == 0)
     {
