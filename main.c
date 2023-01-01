@@ -107,7 +107,9 @@ int main(int argc, char const *argv[])
 
     add_scene("sph", vec3(0, 0, -2), vec3(1, 0, 0), cyldata(0.5, 0.6, 0));
     add_scene("sph", vec3(-0.5, 0, -3), vec3(0, 1, 0), cyldata(0.5, 0.6, 0));
-    add_scene("cyl", vec3(-1, 0, -1), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 0));
+    add_scene("pln", vec3(0, -1, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 3));
+    add_scene("cyl", vec3(-1, -0.9, -1.5), vec3(0.7, 1, 0.5), cyldata(0.5, 0.7, 3));
+
 
     FILE *fd;
     

@@ -7,7 +7,6 @@ t_scene *scene_obj(t_object object)
 
     size = sizeof(t_scene);
     rtn = malloc(size + 4);
-    printf("size = %lu \n", size);
     rtn->next = NULL;
     rtn->prev = NULL;
     rtn->object = object;

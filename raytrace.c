@@ -10,13 +10,15 @@ t_vec3 ray_color2(t_ray ray, int depth)
     
     if (check_intersections(ray, &hit))
     {
-        shadow_r = cr_ray(hit.p, unit_vector(sub(hit.p, gen.light.center)));
-        if (!shadow_ray(shadow_r, hit.obj))
+        shadow_r = cr_ray(hit.p, unit_vector(gen.light.center));
+        if (shadow_ray(shadow_r, hit.obj) == 0)
         {
             return (point_light2(&hit, gen.light, hit.color));
         }
         else
-            return vec3(0.0, 0.0, 0.0);
+        {
+            return vec3(0, 0, 0);
+        }
         
     }
     return (vec3(0.15, 0.15, 0.15));
@@ -48,7 +50,7 @@ int check_intersections(t_ray ray, t_hit *hit)
                 {
                     tmin = hit->t;
                     hit->normal = temp->object.mesh->triangles[i].normal;
-                    hit->obj = &temp->object.mesh;
+                    hit->obj = &(temp->object);
                     hit->color = temp->object.color;
                 }
             }
@@ -71,23 +73,19 @@ int shadow_ray(t_ray ray, void *not)
     t_hit hit;
     t_scene *temp;
     temp = gen.scene;
+    hit.t = -1;
     while (temp)
     {
         int i = 0;
-        while (&temp->object.mesh != not && i < temp->object.mesh->size)
+
+        while (!(&(temp->object) == not) && i < temp->object.mesh->size)
         {
-            // if (dot(temp->object.mesh->triangles[i].normal, sub(ray.origin, ray.direction)) < 0.0)
-            // {
-            //     i++;
-            //     continue;
-            // }
-            if (&temp->object.mesh->triangles[i] != not && call_back(ray, temp->object.mesh->triangles[i], &(hit.t), &hit.p))
+            if (call_back(ray, temp->object.mesh->triangles[i], &(hit.t), &hit.p))
             {
                 if (hit.t > 0.0)
                 {
                     return 1;
                 }
-                
             }
             i++;
         }

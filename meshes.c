@@ -170,6 +170,16 @@ void plane(t_mesh **self, t_cyl *data, t_vec3 center)
 
     *self = mesh();
     
+
+    a = vec3(-1 * data->size, 0, -1 * data->size);
+    b = vec3(1* data->size, 0, -1*data->size);
+    c = vec3(-1 * data->size, 0, 1*data->size);
+    d = vec3(1 * data->size, 0, 1 * data->size);
+
+    mesh_append(*self, triangle(a, b, d));
+    mesh_append(*self, triangle(d, c, a));
+    //(*self)->triangles[0].normal = vec3(0, 1, 0);
+    //(*self)->triangles[1].normal = vec3(0, 1, 0);
     move_mesh(*self, center);
     calculate_normals(*self);
 }
