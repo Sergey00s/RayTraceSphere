@@ -196,6 +196,7 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     {
         obj.mesh = mesh();
         drawSphere(data.r, 0, 0, obj.mesh);
+        rotate(obj.mesh, 90, 0);
         move_mesh(obj.mesh, center);
         calculate_normals(obj.mesh);
     }

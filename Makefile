@@ -2,7 +2,7 @@ NAME=ray
 SRC = $(wildcard *.c)
 INC = minirt.h
 OBJECTS = $(SRC:.c=.o)
-CC = gcc
+CC = gcc 
 CFLAGS = -I libft -I veclib -lm
 LIBFT = libft
 VECLIB = veclib

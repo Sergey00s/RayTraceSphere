@@ -142,6 +142,7 @@ typedef struct s_hit
 
 
 extern t_gen gen;
+void rotate(t_mesh *mesh, float angle, int axis);
 t_vec3 calculate_pos(t_triangle tris, double u, double v);
 int shadow_ray(t_ray ray, void *not);
 int check_intersections(t_ray ray, t_hit *hit);

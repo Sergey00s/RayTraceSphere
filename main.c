@@ -42,10 +42,10 @@ void render(t_cam cam, t_img image, FILE *stream)
             {
                 if (i % 2 == 0)
                 {
-                    //     u = ((double)(i)) / (image.width -1);
-                    u = (i + random_double()) / (image.width -1);
-                    //   v = ((double)(j)) / (image.height -1);
-                    v = (j + random_double()) / (image.height -1);
+                         u = ((double)(i)) / (image.width -1);
+                   // u = (i + random_double()) / (image.width -1);
+                       v = ((double)(j)) / (image.height -1);
+                   // v = (j + random_double()) / (image.height -1);
                     ray_s = cr_ray(cam.origin, direction(cam, u, v));
                     optimum = ray_color2(ray_s, 5);
                     temp = optimum;
@@ -87,8 +87,6 @@ t_vec3 center_of_triangle(t_triangle tri)
     return a;
 }
 
-
-
 int main(int argc, char const *argv[])
 {
 
@@ -105,23 +103,18 @@ int main(int argc, char const *argv[])
     char *filename;
     char *temp;
 
-    add_scene("sph", vec3(0, 0, -2), vec3(1, 0, 0), cyldata(0.5, 0.6, 0));
-    add_scene("sph", vec3(-0.5, 0, -3), vec3(0, 1, 0), cyldata(0.5, 0.6, 0));
+
+    add_scene("sph", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.5, 0.6, 0));
     add_scene("pln", vec3(0, -1, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 3));
-    add_scene("cyl", vec3(-1, -0.9, -1.5), vec3(0.7, 1, 0.5), cyldata(0.5, 0.7, 3));
-
-
     FILE *fd;
-    
     fd = openppm("frames/new.ppm", myimg.width, myimg.height);
-         clock_t start, end;
-         double elapsed;
-    
-        start = clock();
+    clock_t start, end;
+    double elapsed;
+    start = clock();
     render(mycam, myimg, fd);
     end = clock();  
-             elapsed = (double)(end - start) / CLOCKS_PER_SEC;  // calculate elapsed time
-             printf("Time elapsed: %.2f seconds\n", elapsed); 
+    elapsed = (double)(end - start) / CLOCKS_PER_SEC;  // calculate elapsed time
+    printf("Time elapsed: %.2f seconds\n", elapsed); 
     fclose(fd);
     return 0;
 }
