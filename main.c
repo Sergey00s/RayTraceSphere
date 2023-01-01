@@ -33,19 +33,26 @@ void render(t_cam cam, t_img image, FILE *stream)
     double u;
     double v;
     t_ray ray_s;
-    t_vec3 curcol;    
+    t_vec3 curcol;
+    t_vec3 optimum;
+    t_vec3 temp;
   for (int j = image.height - 1; j >= 0; --j) {
         for (int i = 0; i < image.width; ++i) {
-            curcol = vec3(0, 0, 0);
             for (size_t samp = 0; samp < 1; samp++)
             {
-               // u = (i + random_double()) / (image.width -1);
-                u = ((double)(i)) / (image.width -1);
-               //  v = (j + random_double()) / (image.height -1);
-                v = ((double)(j)) / (image.height -1);        
-                ray_s = cr_ray(cam.origin, direction(cam, u, v));
-                
-                curcol = add(ray_color2(ray_s, 5), curcol);
+                if (i % 2 == 0)
+                {
+                    //     u = ((double)(i)) / (image.width -1);
+                    u = (i + random_double()) / (image.width -1);
+                    //   v = ((double)(j)) / (image.height -1);
+                    v = (j + random_double()) / (image.height -1);
+                    ray_s = cr_ray(cam.origin, direction(cam, u, v));
+                    optimum = ray_color2(ray_s, 5);
+                    temp = optimum;
+                }
+                else
+                    optimum = temp;
+                curcol = optimum;//add(optimum, curcol);
             }
             write_color(stream, curcol, 1);
         }
@@ -92,26 +99,27 @@ int main(int argc, char const *argv[])
     myimg.width = 1080;
     myimg.height = (int)myimg.width / myimg.a_ratio;
     mycam = cam(2.0, 2.0, myimg.a_ratio, vec3(0, 0, 2));
-    gen.light.center = vec3(1, 0, -1);
-    gen.light.brightness = 25;
+    gen.light.center = vec3(-1, 1, 0);
+    gen.light.brightness = 3;
     gen.light.color = vec3(1, 0, 0);
     char *filename;
     char *temp;
-    //t_mesh *a;
-    //subdivide(a);
-    //printf("aut\n");
-    add_scene("sph", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
 
+    add_scene("sph", vec3(0, 0, -2), vec3(1, 0, 0), cyldata(0.5, 0.6, 0));
+    add_scene("sph", vec3(-0.5, 0, -3), vec3(0, 1, 0), cyldata(0.5, 0.6, 0));
+    add_scene("cyl", vec3(-1, 0, -1), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 0));
 
-    //add_scene("pln", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
-    //add_scene("cyl", vec3(0, -0.8, -2), vec3(1, 0, 0), cyldata(0.2, 0.6, 0));
-    
-
-  // add_scene("cyl", vec3(0, 1, -4), vec3(1, 0, 0), cyldata(0.2, 0.3, 0));
     FILE *fd;
     
     fd = openppm("frames/new.ppm", myimg.width, myimg.height);
+         clock_t start, end;
+         double elapsed;
+    
+        start = clock();
     render(mycam, myimg, fd);
+    end = clock();  
+             elapsed = (double)(end - start) / CLOCKS_PER_SEC;  // calculate elapsed time
+             printf("Time elapsed: %.2f seconds\n", elapsed); 
     fclose(fd);
     return 0;
 }

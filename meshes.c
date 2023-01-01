@@ -185,8 +185,8 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     if (ft_strncmp("sph", name, ft_strlen(name)) == 0)
     {
         obj.mesh = mesh();
-        drawSphere(1, 0, 0, obj.mesh);
-        move_mesh(obj.mesh, vec3(0, 0, -2));
+        drawSphere(data.r, 0, 0, obj.mesh);
+        move_mesh(obj.mesh, center);
         calculate_normals(obj.mesh);
     }
     else if (ft_strncmp("cyl", name, ft_strlen(name)) == 0)

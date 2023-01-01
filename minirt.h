@@ -9,6 +9,7 @@
 # include <math.h>
 # include <vec3d.h>
 # include <libft.h>
+# include <time.h>
 
 # define PI 3.1415926
 #define MYRAND_MAX 0xFFFF
@@ -132,7 +133,7 @@ typedef struct s_minirt
 typedef struct s_hit
 {
     double t;
-    void *addres;
+    void *obj;
     t_vec3 p;
     t_vec3 normal;
     t_vec3 color;
@@ -141,6 +142,11 @@ typedef struct s_hit
 
 
 extern t_gen gen;
+t_vec3 calculate_pos(t_triangle tris, double u, double v);
+int shadow_ray(t_ray ray, void *not);
+int check_intersections(t_ray ray, t_hit *hit);
+double point_ray_distance(t_vec3 point, t_ray ray);
+t_vec3 centroid_3d(t_triangle tris);
 void subdivide(t_mesh *mymesh);
 void drawSphere(double r, int lats, int longs, t_mesh *self);
 void smooth_normals(t_mesh *mesh);

@@ -90,9 +90,9 @@ int call_back(t_ray ray, t_triangle tris, double *value, t_vec3 *pos)
     double u;
     double v;
 
- //   tris.a = calc_transform(tris.a);
-   // tris.b = calc_transform(tris.b);
-   // tris.c = calc_transform(tris.c);
+    //   tris.a = calc_transform(tris.a);
+    //  tris.b = calc_transform(tris.b);
+    //  tris.c = calc_transform(tris.c);
 
     result = intersect_triangle3((double[]){ray.origin.x,ray.origin.y,ray.origin.z},
     (double[]){ray.direction.x,ray.direction.y,ray.direction.z},  
@@ -100,7 +100,7 @@ int call_back(t_ray ray, t_triangle tris, double *value, t_vec3 *pos)
             (double[]){tris.b.x, tris.b.y, tris.b.z},
             (double[]){tris.c.x, tris.c.y, tris.c.z},
 			value, &u, &v);
-    *pos = calculate_pos(tris, u, v);
-    *pos = ray_on_at(ray, *value);
+    //*pos = calculate_pos(tris, u, v);
+    //*pos = ray_on_at(ray, *value);
     return result;
 }

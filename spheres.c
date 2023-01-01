@@ -3,13 +3,12 @@
 void drawSphere(double r, int lats, int longs, t_mesh *self)
  {
     
-        float pi = 3.141592;
-        float di = 0.02;
-        float dj = 0.04;
+        float pi = 3.141;
+        float di = 0.0667;
+        float dj = 0.1;
         float db = di * 2 * pi;
         float da = dj * pi;
-    
-    
+
         for (float i = 0; i < 1.0; i += di) //horizonal
             for (float j = 0; j < 1.0; j += dj) //vertical
             {
@@ -36,7 +35,6 @@ void drawSphere(double r, int lats, int longs, t_mesh *self)
                         r * cos(a + da) * sin(b + db),
                         r * sin(a + da));
                 //P4
-                    
                    t_vec3 p4 = vec3(
                         r * cos(a + da) * cos(b),
                         r * cos(a + da) * sin(b),
@@ -46,5 +44,6 @@ void drawSphere(double r, int lats, int longs, t_mesh *self)
                     mesh_append(self, left);
                     mesh_append(self, right);
             }
+            
     }
     
