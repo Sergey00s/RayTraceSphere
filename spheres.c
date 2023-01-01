@@ -14,10 +14,6 @@ void drawSphere(double r, int lats, int longs, t_mesh *self)
             {
                 float b = i * 2 * pi;      //0     to  2pi
                 float a = (j - 0.5) * pi;  //-pi/2 to pi/2
-
-                //glBegin(GL_QUADS);
-                //P1
-                    //glTexCoord2f(i, j);
                     t_vec3 p1 = vec3(
                         r * cos(a) * cos(b),
                         r * cos(a) * sin(b),

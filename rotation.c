@@ -51,11 +51,15 @@ void rotate(t_mesh *mesh, float angle, int axis)
     }
     else if (axis == 1)
     {
-       rotateZ(&mesh->triangles[i].a, &mesh->triangles[i].b, &mesh->triangles[i].c, angle);
+      rotateZ(&mesh->triangles[i].a.x, &mesh->triangles[i].a.y, &mesh->triangles[i].a.z, angle);
+       rotateZ(&mesh->triangles[i].b.x, &mesh->triangles[i].b.y, &mesh->triangles[i].b.z, angle);
+       rotateZ(&mesh->triangles[i].c.x, &mesh->triangles[i].c.y, &mesh->triangles[i].c.z, angle);
     }
     else if (axis == 2)
     {
-       rotateY(&mesh->triangles[i].a, &mesh->triangles[i].b, &mesh->triangles[i].c, angle);
+       rotateY(&mesh->triangles[i].a.x, &mesh->triangles[i].a.y, &mesh->triangles[i].a.z, angle);
+       rotateY(&mesh->triangles[i].b.x, &mesh->triangles[i].b.y, &mesh->triangles[i].b.z, angle);
+       rotateY(&mesh->triangles[i].c.x, &mesh->triangles[i].c.y, &mesh->triangles[i].c.z, angle);
     }
     i++;
   }
