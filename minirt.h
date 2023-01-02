@@ -128,6 +128,9 @@ typedef struct s_minirt
     t_obj *obj;
     t_object *obje;
     t_point light;
+    t_vec3 ambient_color;
+    double ambient_ratio;
+    t_vec3 ambient_salt;
     t_scene *scene;
 }               t_gen;
 
@@ -143,6 +146,8 @@ typedef struct s_hit
 
 
 extern t_gen gen;
+
+double reverse_equation(t_ray ray, t_vec3 point);
 void rotate(t_mesh *mesh, float angle, int axis);
 void rotate_by_directions(t_mesh *mesh, t_vec3 norms);
 t_vec3 calculate_pos(t_triangle tris, double u, double v);

@@ -13,7 +13,8 @@ t_vec3 point_light2(t_hit *h, t_point light, t_vec3 color)
     rtn = max(dot(h->normal, ld), 0);
     rtn = rtn * light.brightness;
     dist = length_squared(sub(light.center, h->p));
-    ld = dvd(mpv(color, rtn), dist);
+    ld = dvd(mp(mpv(color, rtn), light.color), dist);
+    //ld = mp(color, light.color);
     return (ld);
 
 }

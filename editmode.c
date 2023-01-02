@@ -30,13 +30,10 @@ int intersect_triangle3(double orig[3], double dir[3],
    /* find vectors for two edges sharing vert0 */
    SUB(edge1, vert1, vert0);
    SUB(edge2, vert2, vert0);
-
    /* begin calculating determinant - also used to calculate U parameter */
    CROSS(pvec, dir, edge2);
-
    /* if determinant is near zero, ray lies in plane of triangle */
    det = DOT(edge1, pvec);
-
    /* calculate distance from vert0 to ray origin */
    SUB(tvec, orig, vert0);
    inv_det = 1.0 / det;

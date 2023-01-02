@@ -80,13 +80,12 @@ t_vec3 direction_to_angle(t_vec3 dir)
 
 
  double angle_xy = atan2(dir.y, dir.x);
-double angle_xz = atan2(dir.z, dir.x);
-// Find the angle between the vector and the Z axis
   double angle_yz = acos(dir.z / sqrt(dir.x*dir.x + dir.y*dir.y + dir.z*dir.z));
+  double angle_xz = atan2(dir.z, dir.x);
+// Find the angle between the vector and the Z axis
 double angle_xy_degrees = angle_xy * 180.0 / PI;
 double angle_yz_degrees = angle_yz * 180.0 / PI;
 double angle_xz_degrees = angle_xz * 180.0 / PI;
-//printf("%f %f %f\n", angle_xy_degrees, angle_yz_degrees, angle_xz_degrees);
   return vec3(angle_xy_degrees, angle_yz_degrees, angle_xz_degrees);
 }
 
@@ -126,7 +125,7 @@ void rotate(t_mesh *mesh, float angle, int axis)
     t_vec3 angles;
 
     angles = direction_to_angle(norms);
-    rotate(mesh, 90 - angles.x, 2);
-    //rotate(mesh, 90 - angles.y, 1);    
-    rotate(mesh, 90 - angles.y, 0);    
+    rotate(mesh, 90 - angles.y, 0);
+   // rotate(mesh, 90 - angles.y, 0);    
+    rotate(mesh, 90 - angles.x, 2);    
   }
