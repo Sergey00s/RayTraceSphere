@@ -153,10 +153,9 @@ void cylinder(t_mesh **self, t_cyl *data, t_vec3 center)
         h++;
     }
     *self = make_cylinder(arr, data, h, arr2, sectorCount);
+    rotate_by_directions(*self, data->dir);
     move_mesh(*self, add(neg(vec3(0, 0, 0)), center));
     calculate_normals(*self);
-
-
 }
 
 
@@ -169,17 +168,13 @@ void plane(t_mesh **self, t_cyl *data, t_vec3 center)
     t_vec3 d;
 
     *self = mesh();
-    
-
     a = vec3(-1 * data->size, 0, -1 * data->size);
     b = vec3(1* data->size, 0, -1*data->size);
     c = vec3(-1 * data->size, 0, 1*data->size);
     d = vec3(1 * data->size, 0, 1 * data->size);
-
     mesh_append(*self, triangle(a, b, d));
     mesh_append(*self, triangle(d, c, a));
-    //(*self)->triangles[0].normal = vec3(0, 1, 0);
-    //(*self)->triangles[1].normal = vec3(0, 1, 0);
+    rotate_by_directions(*self, data->dir);
     move_mesh(*self, center);
     calculate_normals(*self);
 }
@@ -196,7 +191,8 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     {
         obj.mesh = mesh();
         drawSphere(data.r, 0, 0, obj.mesh);
-        rotate(obj.mesh, 90, 0);
+        //rotate(obj.mesh, 90, 0);
+        rotate_by_directions(obj.mesh, data.dir);
         move_mesh(obj.mesh, center);
         calculate_normals(obj.mesh);
     }

@@ -55,6 +55,7 @@ typedef struct s_cyl
 {
     t_vec3 origin;
     t_vec3 color;
+    t_vec3 dir;
     double r;
     double h;
     double size;
@@ -143,6 +144,7 @@ typedef struct s_hit
 
 extern t_gen gen;
 void rotate(t_mesh *mesh, float angle, int axis);
+void rotate_by_directions(t_mesh *mesh, t_vec3 norms);
 t_vec3 calculate_pos(t_triangle tris, double u, double v);
 int shadow_ray(t_ray ray, void *not);
 int check_intersections(t_ray ray, t_hit *hit);
@@ -152,7 +154,7 @@ void subdivide(t_mesh *mymesh);
 void drawSphere(double r, int lats, int longs, t_mesh *self);
 void smooth_normals(t_mesh *mesh);
 void add_scene(char *name, t_vec3 center, t_vec3 color, t_cyl data);
-t_cyl cyldata(double radius, double height, double size);
+t_cyl cyldata(double radius, double height, double size, t_vec3 dir);
 t_vec3 ray_color2(t_ray ray, int depth);
 t_scene *scene_obj(t_object object);
 void scene_add_back(t_scene **self, t_scene *newscn);

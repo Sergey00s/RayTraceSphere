@@ -46,10 +46,11 @@ void calculate_normals(t_mesh *mesh)
 
 }
 
-t_cyl cyldata(double radius, double height, double size)
+t_cyl cyldata(double radius, double height, double size, t_vec3 dir)
 {
     t_cyl cyldata;
     
+    cyldata.dir = dir;
     cyldata.r = radius;
     cyldata.h = height;
     cyldata.size = size;
