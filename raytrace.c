@@ -19,8 +19,8 @@ t_vec3 ray_color2(t_ray ray, int depth)
         {
             return add(vec3(0, 0, 0), gen.ambient_salt);
         }
-        
     }
+    return mpv(gen.ambient_color, 0.8);
     return (vec3(0.15, 0.15, 0.15));
 }
 

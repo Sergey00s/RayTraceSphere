@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
     gen.ambient_salt = mpv(gen.ambient_color, 0.5 * gen.ambient_ratio);
     gen.light.center = vec3(0, 0.7, -2);
     gen.light.brightness = 1;
-    gen.light.color = vec3(1, 1, 1);
+    gen.light.color = vec3(0, 0, 0);
     char *filename;
     char *temp;
 
@@ -114,6 +114,8 @@ int main(int argc, char const *argv[])
     add_scene("pln", vec3(-1, -0, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 1, vec3(-1, 0, 0)));
     add_scene("pln", vec3(0, -1, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 1, vec3(0, 1, 0)));
     add_scene("sph", vec3(0, -0.8, -2), vec3(1, 1, 0.5), cyldata(0.2, 0.4, 1, vec3(-1, 0, 0)));
+    add_scene("cyl", vec3(0, 0.5, -1), vec3(1, 0, 0.5), cyldata(0.1, 0.4, 1, vec3(-1, 0, 0)));
+
 
 
     //add_scene("pln", vec3(-0.5, -1, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 3, vec3(-1, 0, 0)));
