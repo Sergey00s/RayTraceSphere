@@ -10,7 +10,7 @@ t_vec3 ray_color2(t_ray ray, int depth)
     
     if (check_intersections(ray, &hit))
     {
-        shadow_r = cr_ray(hit.p, unit_vector(gen.light.center));
+        shadow_r = cr_ray(hit.p, unit_vector(sub(gen.light.center, hit.p)));
         if (shadow_ray(shadow_r, hit.obj) == 0)
         {
             return add(point_light2(&hit, gen.light, hit.color), gen.ambient_salt);
@@ -27,11 +27,16 @@ t_vec3 ray_color2(t_ray ray, int depth)
 
 double reverse_equation(t_ray ray, t_vec3 point)
 {
-    t_vec3 a;
-    t_vec3 b;
-    a = sub(point, ray.origin);
-    b.x = dot(a ,ray.direction) / length(ray.direction);
-    return(b.x);
+ 
+  double t = ((point.x - ray.origin.x) * ray.direction.x +
+              (point.y - ray.origin.y) * ray.direction.y +
+              (point.z - ray.origin.z) * ray.direction.z) /
+             (ray.direction.x * ray.direction.x +
+              ray.direction.y * ray.direction.y +
+              ray.direction.z * ray.direction.z);
+
+    return t;
+
 }
 
 int check_intersections(t_ray ray, t_hit *hit)
@@ -93,7 +98,9 @@ int shadow_ray(t_ray ray, void *not)
             {
                 if (hit.t > 0.0)
                 {
-                    if (reverse_equation(ray, gen.light.center) > hit.t)
+                    double t;
+                    t = reverse_equation(ray, gen.light.center);
+                    if (t > hit.t)
                         return 1;
                 }
             }
