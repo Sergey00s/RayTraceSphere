@@ -125,7 +125,7 @@ int main(int argc, char const *argv[])
     myimg.height = (int)myimg.width / myimg.a_ratio;
     mycam = cam(myimg.a_ratio, vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0), 90);
     gen.ambient_ratio = 0.3;
-    gen.ambient_color = vec3(0.2, 0.2, 0.3);
+    gen.ambient_color = vec3(0.1, 0.1, 0.1);
     gen.ambient_salt = mpv(gen.ambient_color, 0.5 * gen.ambient_ratio);
     gen.light.center = vec3(0.5, 0, 0.1);
     gen.light.brightness = 1;
@@ -133,6 +133,13 @@ int main(int argc, char const *argv[])
     char *filename;
     char *temp;
 
+    if (gen.light.brightness == -1)
+    {
+        gen.light.center = gen.cam.origin;
+        gen.light.brightness = 0.05;
+        gen.light.color = gen.ambient_color;
+    }
+    
     add_scene("pln", vec3(0, 0, 3), vec3(1, 1, 1), cyldata(0.5, 0.4, 2, vec3(0, 0, -1)));
     add_scene("pln", vec3(0, 1, 2), vec3(1, 1, 1), cyldata(0.5, 0.4, 1, vec3(0, -1, 0)));
     add_scene("pln", vec3(1, -0, 2), vec3(1, 1, 1), cyldata(0.5, 0.4, 1, vec3(1, 0, 0)));
@@ -141,13 +148,10 @@ int main(int argc, char const *argv[])
     //add_scene("sph", vec3(-0.4, 0.2, -2), vec3(0, 0, 1), cyldata(0.2, 0.4, 1, vec3(-1, 0, 0)));
     //add_scene("sph", vec3(0, 0.2, -2), vec3(1, 0, 0), cyldata(0.2, 0.4, 1, vec3(-1, 0, 0)));
     //add_scene("sph", vec3(0.4, 0.2, -2), vec3(0, 1, 0), cyldata(0.2, 0.4, 1, vec3(-1, 0, 0)));
-    add_scene("cyl", vec3(0, -1, 2), vec3(1, 0, 0.5), cyldata(0.4, 0.7, 1, vec3(0, 1, 0)));
+    add_scene("cyl", vec3(2, 1, 2), vec3(1, 0, 0.5), cyldata(0.4, 0.7, 1, vec3(0, 1, 0)));
     
    // add_scene("sph", vec3(0, 1.6, -2), vec3(0, 0, 1), cyldata(0.05, 0.4, 1, vec3(-1, 0, 0)));
     
-
-
-
     //add_scene("pln", vec3(-0.5, -1, -2), vec3(0, 1, 0.5), cyldata(0.5, 0.4, 3, vec3(-1, 0, 0)));
     //add_scene("cyl", vec3(-1, 0, -2), vec3(1, 0, 0), cyldata(0.5, 1, 0, vec3(0, -1, 0)));
     //add_scene("sph", vec3(-1, 0, -2), vec3(1, 0, 0), cyldata(0.5, 0.6, 0, vec3(0, 1, 0)));
