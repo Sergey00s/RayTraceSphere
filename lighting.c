@@ -8,8 +8,6 @@ t_vec3 point_light2(t_hit *h, t_point light, t_vec3 color)
     double dist;
     t_vec3 ld;
     
-
-
     ld = add((light.center), neg(h->p));
     ld = dvd(ld, length(sub(light.center, h->p)));
     rtn = max(dot(h->normal, ld), 0);

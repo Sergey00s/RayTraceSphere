@@ -57,8 +57,6 @@ t_cyl cyldata(double radius, double height, double size, t_vec3 dir)
     return cyldata;
 }
 
-
-
 void add_scene(char *name, t_vec3 center, t_vec3 color, t_cyl data)
 {
     scene_add_back(&(gen.scene), scene_obj(object(name, center, color, data)));

@@ -74,6 +74,16 @@ t_vec3 cross(t_vec3 a, t_vec3 b)
    return result;
 }
 
+t_vec3 cross_product(t_vec3 v1, t_vec3 v2)
+{
+	t_vec3 rtn;
+
+	rtn.x = v1.y*v2.z-v1.z*v2.y; 
+	rtn.y = v1.z*v2.x-v1.x*v2.z;
+    rtn.z = v1.x*v2.y-v1.y*v2.x;
+	return rtn;
+}
+
 t_vec3 neg(t_vec3 a)
 {
 	a.x = -1 * a.x;
@@ -91,7 +101,6 @@ double dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x*b.x + a.y*b.y + a.z*b.z);
 }
-
 
 double length_squared(t_vec3 a)
 {

@@ -13,18 +13,17 @@
 
 # define PI 3.1415926
 #define MYRAND_MAX 0xFFFF
-
 # define IMAX 2147483647
 #define EPSILON 0.000001
-#define CROSS(dest,v1,v2) \
-          dest[0]=v1[1]*v2[2]-v1[2]*v2[1]; \
-          dest[1]=v1[2]*v2[0]-v1[0]*v2[2]; \
-          dest[2]=v1[0]*v2[1]-v1[1]*v2[0];
-#define DOT(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
-#define SUB(dest,v1,v2) \
-          dest[0]=v1[0]-v2[0]; \
-          dest[1]=v1[1]-v2[1]; \
-          dest[2]=v1[2]-v2[2]; 
+// #define CROSS(dest,v1,v2) \
+//           dest[0]=v1[1]*v2[2]-v1[2]*v2[1]; \
+//           dest[1]=v1[2]*v2[0]-v1[0]*v2[2]; \
+//           dest[2]=v1[0]*v2[1]-v1[1]*v2[0];
+// #define DOT(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
+// #define SUB(dest,v1,v2) \
+//           dest[0]=v1[0]-v2[0]; \
+//           dest[1]=v1[1]-v2[1]; \
+//           dest[2]=v1[2]-v2[2]; 
 
 
 typedef struct s_point
@@ -42,15 +41,6 @@ typedef struct  s_img
 
 }               t_img;
 
-
-typedef struct s_sph
-{
-    t_vec3 origin;
-    t_vec3 color;
-    double radius;
-}               t_sph;
-
-
 typedef struct s_cyl
 {
     t_vec3 origin;
@@ -61,15 +51,6 @@ typedef struct s_cyl
     double size;
 
 }               t_cyl;
-
-typedef struct s_obj
-{
-    t_sph *sph;
-    int sphsize;
-    t_cyl *cyl;
-    int cylsize;
-
-}              t_obj;
 
 typedef struct s_ray
 {
@@ -82,7 +63,6 @@ typedef struct s_triangle
     t_vec3 a;
     t_vec3 b;
     t_vec3 c;
-
     t_vec3 normal;
 }   t_triangle;
 
@@ -106,7 +86,6 @@ typedef struct s_scene
     t_object object;
     struct s_scene *next;
     struct s_scene *prev;
-
 }               t_scene;
 
 typedef struct s_cam
@@ -118,15 +97,12 @@ typedef struct s_cam
     t_vec3 horizontal;
     t_vec3 vertical;
     t_vec3 lower_left;
-    
 }               t_cam;
 
 
 typedef struct s_minirt
 {
     t_cam cam;
-    t_obj *obj;
-    t_object *obje;
     t_point light;
     t_vec3 ambient_color;
     double ambient_ratio;
@@ -142,11 +118,14 @@ typedef struct s_hit
     t_vec3 normal;
     t_vec3 color;
     int front_face;
+    double u;
+    double v;
 }               t_hit;
 
 
 extern t_gen gen;
 
+int intersect_triangle(t_ray ray, t_triangle tri, t_hit *hit);
 double reverse_equation(t_ray ray, t_vec3 point);
 void rotate(t_mesh *mesh, float angle, int axis);
 void rotate_by_directions(t_mesh *mesh, t_vec3 norms);
@@ -169,15 +148,7 @@ int call_back(t_ray ray, t_triangle tris, double *value, t_vec3 *pos);
 t_triangle triangle(t_vec3 v1, t_vec3 v2, t_vec3 v3);
 t_mesh *mesh(void);
 void mesh_append(t_mesh *self, t_triangle triangle);
-void new_cyl(t_obj *self, t_vec3 pos, double r, double h, t_vec3 color);
-int c_inter(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs);
-int c_inter2(t_ray ray, t_cyl cyl, t_hit *hit, double mins, double maxs);
-t_obj *objs();
-int shadow_int(t_ray ray, t_obj obj, t_hit *hit, void *not, double maxs);
-int all_intersect(t_ray ray, t_obj obj, t_hit *hit, double mins, double maxs);
-void new_sph(t_obj *self,  t_vec3 pos, double r, t_vec3 color);
 double max(double x, double y);
-int s_inter(t_ray ray, t_sph sph, t_hit *hit, double mins, double maxs);
 t_vec3 ray_color(t_ray ray, int depth);
 t_ray cr_ray(t_vec3 origin, t_vec3 direction);
 FILE *openppm(const char *name, int width, int height);

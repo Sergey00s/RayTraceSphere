@@ -21,6 +21,7 @@ t_vec3 mp(t_vec3 a, t_vec3 b);
 t_vec3 mpv(t_vec3 a, double c);
 t_vec3 dvd(t_vec3 a, double c);
 t_vec3 cross(t_vec3 a, t_vec3 b);
+t_vec3 cross_product(t_vec3 v1, t_vec3 v2);
 t_vec3 neg(t_vec3 a);
 double dot(t_vec3 a, t_vec3 b);
 double distance(t_vec3 u, t_vec3 v);

@@ -3,6 +3,7 @@
 t_triangle triangle(t_vec3 v1, t_vec3 v2, t_vec3 v3)
 {
     t_triangle t;
+
     t.a = v1;
     t.b = v2;
     t.c = v3;
@@ -18,6 +19,7 @@ t_mesh *mesh(void)
     mesh->triangles = NULL;
     return mesh;
 }
+
 
 void mesh_append(t_mesh *self, t_triangle triangle)
 {
@@ -119,7 +121,7 @@ void cylinder(t_mesh **self, t_cyl *data, t_vec3 center)
     t_vec3 *arr2;
     t_vec3 *temp;
     double degree;
-    int sectorCount = 15;
+    int sectorCount = 20;
     float sectorStep = 2 * PI / sectorCount;
     double x;
     double y;
@@ -174,8 +176,6 @@ void plane(t_mesh **self, t_cyl *data, t_vec3 center)
     d = vec3(1 * data->size, 0, 1 * data->size);
     mesh_append(*self, triangle(a, b, d));
     mesh_append(*self, triangle(d, c, a));
-    //(*self)->triangles[0].normal = data->dir;
-    //(*self)->triangles[1].normal = data->dir;
     rotate_by_directions(*self, data->dir);
     move_mesh(*self, center);
     calculate_normals(*self);
@@ -189,12 +189,11 @@ t_object object(char *name, t_vec3 center, t_vec3 color, t_cyl data)
     obj.center = center;
     obj.color = color;
     obj.name = name;
-    //data.dir = add(data.dir, vec3(0, EPSILON, EPSILON));
+    obj.direction = data.dir;
     if (ft_strncmp("sph", name, ft_strlen(name)) == 0)
     {
         obj.mesh = mesh();
         drawSphere(data.r, 0, 0, obj.mesh);
-        //rotate(obj.mesh, 90, 0);
         rotate_by_directions(obj.mesh, data.dir);
         move_mesh(obj.mesh, center);
         calculate_normals(obj.mesh);
